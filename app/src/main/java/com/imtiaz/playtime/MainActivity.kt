@@ -2,9 +2,12 @@ package com.imtiaz.playtime
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -12,7 +15,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Player.EventListener {
 
     private var player : SimpleExoPlayer? = null
     private var mPlayWhenReady = true
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         player?.apply {
             playWhenReady = mPlayWhenReady
             seekTo(mPlayerCurrentWindow, mPlaybackPosition)
+            addListener(this@MainActivity)
             prepare(mediaSource, false, false)
         }
     }
@@ -58,11 +62,38 @@ class MainActivity : AppCompatActivity() {
             mPlayWhenReady = playWhenReady
             mPlaybackPosition = currentPosition
             mPlayerCurrentWindow = currentWindowIndex
+            removeListener(this@MainActivity)
             release()
             player = null
         }
     }
 
+    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+        when(playbackState){
+
+            ExoPlayer.STATE_IDLE -> {
+                Log.e("EXOPLAYER_STATE", "STATE_IDLE")
+            }
+
+            ExoPlayer.STATE_BUFFERING -> {
+                Log.e("EXOPLAYER_STATE", "STATE_BUFFERING")
+            }
+
+            ExoPlayer.STATE_READY -> {
+                Log.e("EXOPLAYER_STATE", "STATE_READY")
+            }
+
+            ExoPlayer.STATE_ENDED -> {
+                Log.e("EXOPLAYER_STATE", "STATE_ENDED")
+            }
+
+
+        }
+    }
+
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        if(isPlaying) Log.e("EXOPLAYER_STATE", "PLAYING")
+    }
 
     override fun onStart() {
         super.onStart()
