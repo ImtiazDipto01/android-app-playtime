@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -73,10 +74,13 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
 
             ExoPlayer.STATE_IDLE -> {
                 Log.e("EXOPLAYER_STATE", "STATE_IDLE")
+                pbLoader.visibility = View.VISIBLE
+                Toast.makeText(applicationContext, "Video Loading Failed..", Toast.LENGTH_SHORT).show()
             }
 
             ExoPlayer.STATE_BUFFERING -> {
                 Log.e("EXOPLAYER_STATE", "STATE_BUFFERING")
+                pbLoader.visibility = View.VISIBLE
             }
 
             ExoPlayer.STATE_READY -> {
@@ -92,7 +96,10 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        if(isPlaying) Log.e("EXOPLAYER_STATE", "PLAYING")
+        if(isPlaying){
+            Log.e("EXOPLAYER_STATE", "PLAYING")
+            pbLoader.visibility = View.GONE
+        }
     }
 
     override fun onStart() {
