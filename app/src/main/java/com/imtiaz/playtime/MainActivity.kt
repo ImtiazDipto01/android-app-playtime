@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), Player.EventListener {
 
             ExoPlayer.STATE_IDLE -> {
                 Log.e("EXOPLAYER_STATE", "STATE_IDLE")
-                pbLoader.visibility = View.VISIBLE
+                pbLoader.visibility = View.GONE
                 Toast.makeText(applicationContext, "Video Loading Failed..", Toast.LENGTH_SHORT).show()
             }
 
